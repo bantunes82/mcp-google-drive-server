@@ -18,7 +18,10 @@
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Bruno Romao Antunes</name>
+			<email>bantunes82@gmail.com</email>
+		</developer>
 	</developers>
 	<scm>
 		<connection/>

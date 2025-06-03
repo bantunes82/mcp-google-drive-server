@@ -1,5 +1,6 @@
 package bantunes82.mcp.server.google.drive.config;
 
+import bantunes82.mcp.server.google.drive.services.GoogleDriveService;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -7,6 +8,8 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +17,17 @@ import java.util.List;
 
 @Configuration
 public class GoogleDriveConfig {
+
+    /**
+     * Provides a ToolCallbackProvider for Google Drive service.
+     *
+     * @param googleDriveService GoogleDriveService instance.
+     * @return ToolCallbackProvider for Google Drive service.
+     */
+    @Bean
+    public ToolCallbackProvider googleDriveTools(GoogleDriveService googleDriveService) {
+        return MethodToolCallbackProvider.builder().toolObjects(googleDriveService).build();
+    }
 
     /**
      * Provides Google credentials for accessing Google Drive API.

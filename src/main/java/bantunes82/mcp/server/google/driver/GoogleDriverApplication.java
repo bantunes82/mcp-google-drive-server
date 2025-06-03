@@ -20,9 +20,11 @@ public class GoogleDriverApplication implements CommandLineRunner {
 		var folderName = "Viagens"; // Folder's name.
 		var fileName = "photo.png"; // File's name.
 		var fileContentType = "image/png"; // File's content type.
-		var filePath = new java.io.File("files/photo.png"); // File's content.
+		var filePath = new java.io.File("files/photo.png");
+		// Read file content as byte array.
+		var fileContent = java.nio.file.Files.readAllBytes(filePath.toPath());
 
-		googleDriverService.uploadBasic(folderName, fileName, fileContentType, filePath);
+		googleDriverService.uploadBasic(folderName, fileName, fileContentType, fileContent);
 	}
 
 	public static void main(String[] args) {

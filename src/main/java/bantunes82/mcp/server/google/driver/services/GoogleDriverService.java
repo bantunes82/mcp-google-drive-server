@@ -1,7 +1,7 @@
 package bantunes82.mcp.server.google.driver.services;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.FileContent;
+import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import org.slf4j.Logger;
@@ -28,18 +28,18 @@ public class GoogleDriverService {
      * @return Inserted file metadata if successful, {@code null} otherwise.
      * @throws IOException if service account credentials file not found.
      */
-    public String uploadBasic(String folderName, String fileName, String fileContentType, java.io.File filePath) throws IOException {
+    public String uploadBasic(String folderName, String fileName, String fileContentType, byte[] fileContent) throws IOException {
         String folderId = getFolderIdByName(folderName); // Retrieve folder ID by name
 
         // Upload the file on drive.
-        File fileMetadata = new File();
+        var fileMetadata = new File();
         fileMetadata.setName(fileName);
         if (folderId != null) {
             fileMetadata.setParents(List.of(folderId)); // Set the folder ID
         }
 
         // Specify media type and file-path for file.
-        FileContent mediaContent = new FileContent(fileContentType, filePath);
+        var mediaContent = new ByteArrayContent(fileContentType, fileContent);
         try {
             File file = service.files().create(fileMetadata, mediaContent)
                     .setFields("id")

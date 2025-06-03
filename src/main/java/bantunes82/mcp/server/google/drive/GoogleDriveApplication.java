@@ -1,17 +1,17 @@
-package bantunes82.mcp.server.google.driver;
+package bantunes82.mcp.server.google.drive;
 
-import bantunes82.mcp.server.google.driver.services.GoogleDriverService;
+import bantunes82.mcp.server.google.drive.services.GoogleDriveService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GoogleDriverApplication implements CommandLineRunner {
+public class GoogleDriveApplication implements CommandLineRunner {
 
-	private GoogleDriverService googleDriverService;
+	private GoogleDriveService googleDriveService;
 
-	public GoogleDriverApplication(GoogleDriverService googleDriverService) {
-		this.googleDriverService = googleDriverService;
+	public GoogleDriveApplication(GoogleDriveService googleDriveService) {
+		this.googleDriveService = googleDriveService;
 	}
 
 	@Override
@@ -24,11 +24,11 @@ public class GoogleDriverApplication implements CommandLineRunner {
 		// Read file content as byte array.
 		var fileContent = java.nio.file.Files.readAllBytes(filePath.toPath());
 
-		googleDriverService.uploadBasic(folderName, fileName, fileContentType, fileContent);
+		googleDriveService.uploadBasic(folderName, fileName, fileContentType, fileContent);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(GoogleDriverApplication.class, args);
+		SpringApplication.run(GoogleDriveApplication.class, args);
 	}
 
 }

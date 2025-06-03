@@ -1,10 +1,10 @@
-package bantunes82.mcp.server.google.driver;
+package bantunes82.mcp.server.google.drive;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GoogleDriverApplicationTests {
+class GoogleDriveApplicationTests {
 
 	@Test
 	void contextLoads() {

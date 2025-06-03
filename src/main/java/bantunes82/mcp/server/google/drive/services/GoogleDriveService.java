@@ -1,4 +1,4 @@
-package bantunes82.mcp.server.google.driver.services;
+package bantunes82.mcp.server.google.drive.services;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.ByteArrayContent;
@@ -6,19 +6,21 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 
 @Service
-public class GoogleDriverService {
+public class GoogleDriveService {
 
     private Drive service;
 
-    private Logger logger = LoggerFactory.getLogger(GoogleDriverService.class);
+    private Logger logger = LoggerFactory.getLogger(GoogleDriveService.class);
 
-    public GoogleDriverService(Drive service) {
+    public GoogleDriveService(Drive service) {
         this.service = service;
     }
 
@@ -28,7 +30,11 @@ public class GoogleDriverService {
      * @return Inserted file metadata if successful, {@code null} otherwise.
      * @throws IOException if service account credentials file not found.
      */
-    public String uploadBasic(String folderName, String fileName, String fileContentType, byte[] fileContent) throws IOException {
+    @Tool(description = "Uploads a file to Google Drive in a specified folder.")
+    public String uploadBasic(@ToolParam(description = "Folder name to be uploaded in Google Drive", required = false) String folderName,
+                              @ToolParam(description = "File name to be uploaded in Google Drive") String fileName,
+                              @ToolParam(description = "File Content type to be uploaded in Google Drive") String fileContentType,
+                              @ToolParam(description = "File Content to be uploaded in Google Drive") byte[] fileContent) throws IOException {
         String folderId = getFolderIdByName(folderName); // Retrieve folder ID by name
 
         // Upload the file on drive.

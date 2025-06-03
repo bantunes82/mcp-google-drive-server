@@ -1,4 +1,4 @@
-package bantunes82.mcp.server.google.driver.config;
+package bantunes82.mcp.server.google.drive.config;
 
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class GoogleDriverConfig {
+public class GoogleDriveConfig {
 
     /**
      * Provides Google credentials for accessing Google Drive API.

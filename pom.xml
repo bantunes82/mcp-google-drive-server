@@ -47,6 +47,12 @@
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-drive</artifactId>
 			<version>${google-api-service-drive.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
 public class GoogleDriveApplication implements CommandLineRunner {
 
@@ -17,14 +18,11 @@ public class GoogleDriveApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		var folderName = "Viagens"; // Folder's name.
-		var fileName = "photo.png"; // File's name.
-		var fileContentType = "image/png"; // File's content type.
-		var filePath = new java.io.File("files/photo.png");
-		// Read file content as byte array.
-		var fileContent = java.nio.file.Files.readAllBytes(filePath.toPath());
+		/*var folderName = "Viagens"; // Folder's name.
+		var fileName = "test.doc"; // File's name.
+		var fileContent = "This is a test file content for Google Drive upload."; // File's content.
 
-		googleDriveService.uploadBasic(folderName, fileName, fileContentType, fileContent);
+		googleDriveService.uploadMicrosoftWordFile(folderName, fileName, fileContent);*/
 	}
 
 	public static void main(String[] args) {

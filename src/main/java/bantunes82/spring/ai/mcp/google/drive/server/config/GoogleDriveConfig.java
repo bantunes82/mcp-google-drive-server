@@ -1,6 +1,6 @@
-package bantunes82.mcp.server.google.drive.config;
+package bantunes82.spring.ai.mcp.google.drive.server.config;
 
-import bantunes82.mcp.server.google.drive.services.GoogleDriveService;
+import bantunes82.spring.ai.mcp.google.drive.server.services.GoogleDriveService;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;

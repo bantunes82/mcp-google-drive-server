@@ -8,8 +8,8 @@
 		<version>3.5.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>bantunes82.mcp.server</groupId>
-	<artifactId>google-drive</artifactId>
+	<groupId>bantunes82.spring.ai</groupId>
+	<artifactId>mcp-google-drive-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>google-drive</name>
 	<description>MCP Server for google drive</description>

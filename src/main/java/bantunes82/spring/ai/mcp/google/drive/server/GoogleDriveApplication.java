@@ -1,6 +1,6 @@
-package bantunes82.mcp.server.google.drive;
+package bantunes82.spring.ai.mcp.google.drive.server;
 
-import bantunes82.mcp.server.google.drive.services.GoogleDriveService;
+import bantunes82.spring.ai.mcp.google.drive.server.services.GoogleDriveService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package bantunes82.mcp.server.google.drive.services;
+package bantunes82.spring.ai.mcp.google.drive.server.services;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.ByteArrayContent;

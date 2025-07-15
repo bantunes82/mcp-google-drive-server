@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>google-drive</name>
 	<description>MCP Server for google drive</description>
-	<url/>
+	<url>https://github.com/bantunes82/mcp-google-drive-server</url>
 	<licenses>
 		<license/>
 	</licenses>

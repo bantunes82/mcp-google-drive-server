@@ -32,7 +32,7 @@ public class GoogleDriveService {
      * @return Inserted file metadata if successful, {@code null} otherwise.
      * @throws IOException if service account credentials file not found.
      */
-    @Tool(description = "Uploads a file content in Microsoft Word format to Google Drive in a specified folder.")
+    @Tool(name ="upload_microsoft_world_file", description = "Uploads a file content in Microsoft Word format to Google Drive in a specified folder.")
     public String uploadMicrosoftWordFile(@ToolParam(description = "Folder name to be uploaded in Google Drive", required = false) String folderName,
                               @ToolParam(description = "File name to be uploaded in Google Drive") String fileName,
                               @ToolParam(description = "File Content to be uploaded in Google Drive") String fileContent) throws IOException {
@@ -49,7 +49,7 @@ public class GoogleDriveService {
                     .setFields("id")
                     .execute();
             logger.info("File ID: {}", file.getId());
-            return file.getId();
+            return file.getId(); // Return the ID of the uploaded file
         } catch (GoogleJsonResponseException e) {
             // TODO(developer) - handle error appropriately
             logger.error("Unable to upload file: {}", e.getDetails());

@@ -18,6 +18,9 @@ import java.util.Optional;
 @Service
 public class GoogleDriveService {
 
+    private static final String APPLICATION_TYPE_MSWORD = "application/msword";
+    private static final String GOOGLE_DOC_VIEW_URL = "https://docs.google.com/document/d/%s/view";
+
     private Drive service;
 
     private Logger logger = LoggerFactory.getLogger(GoogleDriveService.class);
@@ -27,10 +30,13 @@ public class GoogleDriveService {
     }
 
     /**
-     * Upload new file.
+     * Uploads a file content in Microsoft Word format to Google Drive in a specified folder.
      *
-     * @return Inserted file metadata if successful, {@code null} otherwise.
-     * @throws IOException if service account credentials file not found.
+     * @param folderName  Name of the folder where the file will be uploaded. If null, the file will be uploaded to the root directory.
+     * @param fileName    Name of the file to be uploaded.
+     * @param fileContent Content of the file to be uploaded.
+     * @return The URL of the uploaded file in Google Docs view format.
+     * @throws IOException If an error occurs during the upload process.
      */
     @Tool(name ="upload_microsoft_world_file", description = "Uploads a file content in Microsoft Word format to Google Drive in a specified folder.")
     public String uploadMicrosoftWordFile(@ToolParam(description = "Folder name to be uploaded in Google Drive", required = false) String folderName,
@@ -43,13 +49,13 @@ public class GoogleDriveService {
 
         folderId.ifPresent(id-> fileMetadata.setParents(List.of(id)));
 
-        var mediaContent = new ByteArrayContent("application/msword", fileContent.getBytes(StandardCharsets.UTF_8));
+        var mediaContent = new ByteArrayContent(APPLICATION_TYPE_MSWORD, fileContent.getBytes(StandardCharsets.UTF_8));
         try {
             File file = service.files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute();
             logger.info("File ID: {}", file.getId());
-            return file.getId(); // Return the ID of the uploaded file
+            return String.format(GOOGLE_DOC_VIEW_URL, file.getId());
         } catch (GoogleJsonResponseException e) {
             // TODO(developer) - handle error appropriately
             logger.error("Unable to upload file: {}", e.getDetails());

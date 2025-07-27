@@ -31,4 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-/application_default_credentials.json
+/application_default_credentials*.json
+

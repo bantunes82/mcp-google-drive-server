@@ -10,11 +10,11 @@ Connect to this server using the Model Context Protocol client, for instance, in
 - **upload_microsoft_world_file**:
   - Uploads a file content in Microsoft Word format to Google Drive in a specified folder.
   - Input parameters:
-    - `folderName`: Folder name to be uploaded in Google Drive, if the folder doesn't exist it will be saved in the home folder. (optional)
-    - `fileName`: File name to be uploaded in Google Drive.
-    - `fileContent`: File Content to be uploaded in Google Drive.
+    - `folderName`: Name of the folder where the file will be uploaded. If null, the file will be uploaded to the root directory. (optional)
+    - `fileName`: Name of the file to be uploaded.
+    - `fileContent`: Content of the file to be uploaded.
   - Returns:
-    - `fileId`: The ID of the uploaded file in Google Drive.
+    - `url`: The URL of the uploaded file in Google Docs view format.
 
 ## What You Can Do
 Once set up, you can ask Claude Desktop things like:
@@ -30,12 +30,12 @@ Once set up, you can ask Claude Desktop things like:
   3. [Enable the Cloud Resource Manager API](https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com)
   4. [Set up ADC for a local development environment, inside Cloud Shell](https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment#google-idp)
      - Open Cloud Shell in your Google Cloud Console.
-     - Run the following command: `cloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive`
+     - Run the following command: `gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive`
      - This will open a browser window to authenticate your Google account and grant the necessary permissions.
      - After successful authentication, the credentials will be stored in your local environment, allowing the application to access Google Cloud resources.
      - Look for the credential file that was created, it should be something like: `Credentials saved to file: [/tmp/tmp.6Rvsdsdfesx/application_default_credentials.json]`
      - Copy the contents of the credential file to a new file named `application_default_credentials.json` in the home directory of your local machine. (e.g. `~/application_default_credentials.json`)
-  --
+
 ### 🎯 Choose Your Setup Method
 
 | Method                                                               | Time | Requirements | Best For |
@@ -61,36 +61,19 @@ cd mcp-google-drive-server
 ```
 
 #### 2. Then configure Claude Desktop with:
-- to configure the 'mcp-google-drive-server' to run in [SSE](https://modelcontextprotocol.io/docs/concepts/transports#server-sent-events-sse-deprecated) mode.
+- To configure the 'mcp-google-drive-server' to run in [STDIO](https://modelcontextprotocol.io/docs/concepts/transports#standard-input%2Foutput-stdio) mode.
 ```json
 {
   "mcpServers": {
     "mcp-google-drive-server": {
-      "command": "~/.sdkman/candidates/java/24-open/bin/java",
-      "args": [
-        "-jar", 
-        "/FULL/PATH/TO/target/mcp-google-drive-server-0.0.1-SNAPSHOT.jar"
-      ],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "~/application_default_credentials.json"
-      }
-    }
-  }
-}
-```
-- Or configure the 'mcp-google-drive-server' to run in [STDIO](https://modelcontextprotocol.io/docs/concepts/transports#standard-input%2Foutput-stdio) mode.
-```json
-{
-  "mcpServers": {
-    "mcp-google-drive-server": {
-      "command": "~/.sdkman/candidates/java/24-open/bin/java",
+      "command": "/FULL/PATH/TO/.sdkman/candidates/java/24-open/bin/java",
       "args": [
         "-jar",
         "-Dspring.ai.mcp.server.stdio=true",
         "/FULL/PATH/TO/target/mcp-google-drive-server-0.0.1-SNAPSHOT.jar"
       ],
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "~/application_default_credentials.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "/FULL/PATH/TO/application_default_credentials.json"
       }
     }
   }

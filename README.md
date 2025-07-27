@@ -89,6 +89,18 @@ cd mcp-google-drive-server
 
 ✅ **Success**: You should see Claude use the `upload_microsoft_world_file` tool!
 
+## Troubleshooting
+### "Tool not found" in Claude Desktop
+1. Check the JAR path is correct and absolute
+2. Verify environment variables are set
+3. Restart Claude Desktop completely
+4. Check Claude Desktop's logs/console for errors
+
+### Enable Debug Logging
+Set environment variable: `LOGGING_LEVEL_ROOT=DEBUG`
+
+### Checking Logs
+You can check the logs in the `/usr/lib/claude-desktop/target` directory of the claude-desktop. The log file is named `mcp-google-drive-server.log`.
 
 ---
 ### Reference Documentation

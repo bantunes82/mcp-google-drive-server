@@ -54,8 +54,9 @@ public class GoogleDriveService {
             File file = service.files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute();
-            logger.info("File ID: {}", file.getId());
-            return String.format(GOOGLE_DOC_VIEW_URL, file.getId());
+            var url = String.format(GOOGLE_DOC_VIEW_URL, file.getId());
+            logger.info("URL of the uploaded file: {}", url);
+            return url;
         } catch (GoogleJsonResponseException e) {
             // TODO(developer) - handle error appropriately
             logger.error("Unable to upload file: {}", e.getDetails());
@@ -64,6 +65,9 @@ public class GoogleDriveService {
     }
 
     private Optional<String> getFolderIdByName(String folderName) throws IOException {
+        if (folderName == null) {
+            return Optional.empty();
+        }
         try {
             var result = service.files().list()
                     .setQ("name='" + folderName + "' and mimeType='application/vnd.google-apps.folder'")

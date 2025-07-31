@@ -6,8 +6,7 @@
 - Test all: `./mvnw test`
 - Run single test: `./mvnw test -Dtest=ClassName#methodName`
 - Example: `./mvnw test -Dtest=GoogleDriveApplicationTests#contextLoads`
-- Example: `./mvnw test -Dtest=GoogleDriveApplicationTests#contextLoads
--
+
 ## Configuration to run the application
     Configure your MCP client to connect to the server. See the `README.md` for detailed instructions on how to configure Claude Desktop.
 
@@ -17,7 +16,9 @@
     - Classes: PascalCase (e.g., `GoogleDriveService`)
     - Methods/Variables: camelCase (e.g., `uploadMicrosoftWordFile()`)
 - **Imports**: Standard ordering (Java → Spring → other libraries)
-- **Testing**: Use JUnit 5 with Spring Boot Test framework
+- **Testing**: Use JUnit 5 and mockito for unit tests provided by Spring Boot Test framework,
+and for integration tests use `@SpringBootTest` annotation with MockitoBean only if necessary.
+- **Logging**: Use SLF4J for logging, avoid System.out.println
 - **Error Handling**: Use Spring exception handlers for API errors
 - **Documentation**: Add JavaDoc for public methods/classes
 

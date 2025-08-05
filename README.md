@@ -57,7 +57,7 @@ Once set up, you can ask Claude Desktop things like:
 ```bash
 git clone <this-repo>
 cd mcp-google-drive-server
-./mvnw clean package -DskipTests
+./mvnw clean package
 ```
 
 #### 2. Then configure Claude Desktop with:

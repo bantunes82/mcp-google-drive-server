@@ -134,6 +134,17 @@
 						</executions>
 						<configuration>
 							<mainClass>bantunes82.spring.ai.mcp.google.drive.server.GoogleDriveApplication</mainClass>
+							<buildArgs>
+								<buildArg>--no-fallback</buildArg>
+								<buildArg>--install-exit-handlers</buildArg>
+								<buildArg>--enable-url-protocols=http,https</buildArg>
+								<buildArg>-H:+ReportExceptionStackTraces</buildArg>
+								<buildArg>-H:IncludeResources=.*\.properties$</buildArg>
+								<buildArg>-H:IncludeResources=.*\.yml$</buildArg>
+								<buildArg>-H:IncludeResources=.*\.yaml$</buildArg>
+								<buildArg>--initialize-at-build-time=com.google.api.services.drive.model.File,com.google.api.services.drive.model.FileList,com.google.api.services.drive.model.File$VideoMediaMetadata,com.google.api.services.drive.model.File$ShortcutDetails,com.google.api.services.drive.model.File$LinkShareMetadata,com.google.api.services.drive.model.File$LabelInfo,com.google.api.services.drive.model.File$ImageMediaMetadata,com.google.api.services.drive.model.File$ContentHints,com.google.api.services.drive.model.File$Capabilities,com.google.api.services.drive.model.ContentRestriction</buildArg>
+								<buildArg>--trace-class-initialization=true</buildArg>
+							</buildArgs>
 						</configuration>
 					</plugin>
 				</plugins>

@@ -52,10 +52,10 @@ class GoogleDriveServiceTests {
     @Test
     void uploadMicrosoftWordFile_whenFolderExists_shouldUploadFileToFolder() throws IOException {
         // Arrange
-        var fileList = new FileList().setFiles(List.of(new File().setId(FOLDER_ID)));
+        var fileList = new FileList().setFiles(List.of(new File().setId(FOLDER_ID).setName(FOLDER_NAME).setMimeType("application/vnd.google-apps.folder")));
         when(files.list()).thenReturn(listRequest);
-        when(listRequest.setQ("name='" + FOLDER_NAME + "' and mimeType='application/vnd.google-apps.folder'")).thenReturn(listRequest);
-        when(listRequest.setFields("files(id, name)")).thenReturn(listRequest);
+        when(listRequest.setQ("name='" + FOLDER_NAME + "' and trashed=false")).thenReturn(listRequest);
+        when(listRequest.setFields("files(id, name, mimeType)")).thenReturn(listRequest);
         when(listRequest.execute()).thenReturn(fileList);
 
         var uploadedFile = new File().setId(FILE_ID);
@@ -76,18 +76,21 @@ class GoogleDriveServiceTests {
     }
 
     @Test
-    void uploadMicrosoftWordFile_whenFolderDoesNotExist_shouldUploadFileToRoot() throws IOException {
+    void uploadMicrosoftWordFile_whenFolderDoesNotExist_shouldCreateFolderAndUploadFile() throws IOException {
         // Arrange
-        var fileList = new FileList().setFiles(List.of());
+        var emptyFileList = new FileList().setFiles(List.of());
         when(files.list()).thenReturn(listRequest);
-        when(listRequest.setQ("name='" + FOLDER_NAME + "' and mimeType='application/vnd.google-apps.folder'")).thenReturn(listRequest);
-        when(listRequest.setFields("files(id, name)")).thenReturn(listRequest);
-        when(listRequest.execute()).thenReturn(fileList);
+        when(listRequest.setQ("name='" + FOLDER_NAME + "' and trashed=false")).thenReturn(listRequest);
+        when(listRequest.setFields("files(id, name, mimeType)")).thenReturn(listRequest);
+        when(listRequest.execute()).thenReturn(emptyFileList);
 
+        var createdFolder = new File().setId(FOLDER_ID);
         var uploadedFile = new File().setId(FILE_ID);
+
+        when(files.create(any(File.class))).thenReturn(createRequest);
         when(files.create(any(File.class), any())).thenReturn(createRequest);
         when(createRequest.setFields("id")).thenReturn(createRequest);
-        when(createRequest.execute()).thenReturn(uploadedFile);
+        when(createRequest.execute()).thenReturn(createdFolder, uploadedFile);
 
         // Act
         var result = googleDriveService.uploadMicrosoftWordFile(FOLDER_NAME, FILE_NAME, FILE_CONTENT);
@@ -98,7 +101,7 @@ class GoogleDriveServiceTests {
         var fileArgumentCaptor = ArgumentCaptor.forClass(File.class);
         verify(files).create(fileArgumentCaptor.capture(), any());
         assertEquals(FILE_NAME, fileArgumentCaptor.getValue().getName());
-        assertEquals(null, fileArgumentCaptor.getValue().getParents());
+        assertEquals(List.of(FOLDER_ID), fileArgumentCaptor.getValue().getParents());
     }
 
     @Test
@@ -124,10 +127,10 @@ class GoogleDriveServiceTests {
     @Test
     void uploadMicrosoftWordFile_whenThrowsException_shouldThrowException() throws IOException {
         // Arrange
-        var fileList = new FileList().setFiles(List.of(new File().setId(FOLDER_ID)));
+        var fileList = new FileList().setFiles(List.of(new File().setId(FOLDER_ID).setName(FOLDER_NAME).setMimeType("application/vnd.google-apps.folder")));
         when(files.list()).thenReturn(listRequest);
-        when(listRequest.setQ("name='" + FOLDER_NAME + "' and mimeType='application/vnd.google-apps.folder'")).thenReturn(listRequest);
-        when(listRequest.setFields("files(id, name)")).thenReturn(listRequest);
+        when(listRequest.setQ("name='" + FOLDER_NAME + "' and trashed=false")).thenReturn(listRequest);
+        when(listRequest.setFields("files(id, name, mimeType)")).thenReturn(listRequest);
         when(listRequest.execute()).thenReturn(fileList);
 
         when(files.create(any(File.class), any())).thenThrow(new IOException("Test Exception"));

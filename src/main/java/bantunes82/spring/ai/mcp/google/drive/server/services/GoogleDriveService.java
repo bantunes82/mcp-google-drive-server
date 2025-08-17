@@ -22,9 +22,9 @@ public class GoogleDriveService {
     private static final String APPLICATION_TYPE_MSWORD = "application/msword";
     private static final String GOOGLE_DOC_VIEW_URL = "https://docs.google.com/document/d/%s/view";
 
-    private Drive service;
+    private final Drive service;
 
-    private Logger logger = LoggerFactory.getLogger(GoogleDriveService.class);
+    private final Logger logger = LoggerFactory.getLogger(GoogleDriveService.class);
 
     public GoogleDriveService(Drive service) {
         this.service = service;
@@ -43,7 +43,7 @@ public class GoogleDriveService {
     public String uploadMicrosoftWordFile(@ToolParam(description = "Folder name to be uploaded in Google Drive", required = false) String folderName,
                               @ToolParam(description = "File name to be uploaded in Google Drive") String fileName,
                               @ToolParam(description = "File Content to be uploaded in Google Drive") String fileContent) throws IOException {
-        Optional<String> folderId = getFolderIdByName(folderName); // Retrieve folder ID by name
+        Optional<String> folderId = findOrCreateFolder(folderName);
 
         var fileMetadata = new File();
         fileMetadata.setName(fileName);
@@ -65,25 +65,46 @@ public class GoogleDriveService {
         }
     }
 
-    private Optional<String> getFolderIdByName(String folderName) throws IOException {
+    private Optional<String> findOrCreateFolder(String folderName) throws IOException {
+        logger.info("Finding or creating folder: {}", folderName);
         if (folderName == null) {
             return Optional.empty();
         }
-        try {
-            var result = service.files().list()
-                    .setQ("name='" + folderName + "' and mimeType='application/vnd.google-apps.folder'")
-                    .setFields("files(id, name)")
-                    .execute();
-            var files = result.getFiles();
-            if (files != null && !files.isEmpty()) {
-                return Optional.ofNullable(files.get(0).getId()); // Return the first matching folder ID
-            } else {
-                logger.error("Folder with name '{}' not found.", folderName);
-                return Optional.empty();
+
+        // Search for the folder
+        String query = "name='" + folderName + "' and trashed=false";
+        var result = service.files().list()
+                .setQ(query)
+                .setFields("files(id, name, mimeType)")
+                .execute();
+
+        var files = result.getFiles();
+
+        var folder = files.stream()
+                .filter(f -> folderName.equals(f.getName()) && "application/vnd.google-apps.folder".equals(f.getMimeType()))
+                .findFirst();
+
+        if (folder.isPresent()) {
+            // Folder found, return its ID
+            String folderId = folder.get().getId();
+            logger.info("Folder '{}' found with ID: {}", folderName, folderId);
+            return Optional.of(folderId);
+        }else {
+            // Folder not found, create it
+            var folderMetadata = new File();
+            folderMetadata.setName(folderName);
+            folderMetadata.setMimeType("application/vnd.google-apps.folder");
+
+            try {
+                var createdFolder = service.files().create(folderMetadata)
+                        .setFields("id")
+                        .execute();
+                logger.info("Folder '{}' created with ID: {}", folderName, createdFolder.getId());
+                return Optional.of(createdFolder.getId());
+            } catch (GoogleJsonResponseException e) {
+                logger.error("Unable to create folder: {}", e.getDetails());
+                throw e;
             }
-        } catch (GoogleJsonResponseException e) {
-            logger.error("Unable to retrieve folder ID: {}", e.getDetails());
-            throw e;
         }
     }
 

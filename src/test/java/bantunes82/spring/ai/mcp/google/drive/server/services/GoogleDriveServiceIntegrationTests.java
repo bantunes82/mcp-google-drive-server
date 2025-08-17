@@ -38,6 +38,8 @@ class GoogleDriveServiceIntegrationTests {
 
         File folder = new File();
         folder.setId("folder123");
+        folder.setName("test-folder");
+        folder.setMimeType("application/vnd.google-apps.folder");
 
         FileList fileList = new FileList();
         fileList.setFiles(List.of(folder));
@@ -45,8 +47,8 @@ class GoogleDriveServiceIntegrationTests {
         when(drive.files()).thenReturn(files);
 
         when(files.list()).thenReturn(list);
-        when(list.setQ("name='test-folder' and mimeType='application/vnd.google-apps.folder'")).thenReturn(list);
-        when(list.setFields("files(id, name)")).thenReturn(list);
+        when(list.setQ("name='test-folder' and trashed=false")).thenReturn(list);
+        when(list.setFields("files(id, name, mimeType)")).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
 
         when(files.create(any(File.class), any(ByteArrayContent.class))).thenReturn(create);

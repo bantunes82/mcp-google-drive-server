@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
+import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
@@ -67,7 +68,7 @@ public class GoogleDriveService {
 
     private Optional<String> findOrCreateFolder(String folderName) throws IOException {
         logger.info("Finding or creating folder: {}", folderName);
-        if (folderName == null) {
+        if (StringUtils.isEmpty(folderName)) {
             return Optional.empty();
         }
 

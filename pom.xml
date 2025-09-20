@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.4</version>
+		<version>3.5.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>bantunes82.spring.ai</groupId>
@@ -31,7 +31,7 @@
 	</scm>
 	<properties>
 		<java.version>24</java.version>
-		<spring-ai.version>1.0.0</spring-ai.version>
+		<spring-ai.version>1.0.2</spring-ai.version>
 		<google-api-service-drive.version>v3-rev20250427-2.0.0</google-api-service-drive.version>
 	</properties>
 	<dependencies>
@@ -145,6 +145,22 @@
 								<buildArg>--initialize-at-build-time=com.google.api.services.drive.model.File,com.google.api.services.drive.model.FileList,com.google.api.services.drive.model.File$VideoMediaMetadata,com.google.api.services.drive.model.File$ShortcutDetails,com.google.api.services.drive.model.File$LinkShareMetadata,com.google.api.services.drive.model.File$LabelInfo,com.google.api.services.drive.model.File$ImageMediaMetadata,com.google.api.services.drive.model.File$ContentHints,com.google.api.services.drive.model.File$Capabilities,com.google.api.services.drive.model.ContentRestriction</buildArg>
 								<buildArg>--trace-class-initialization=true</buildArg>
 							</buildArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>mcp-stdio</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<profiles>
+								<profile>mcp-stdio</profile>
+							</profiles>
 						</configuration>
 					</plugin>
 				</plugins>

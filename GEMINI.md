@@ -38,5 +38,16 @@ and for integration tests use `@SpringBootTest` annotation with MockitoBean only
 ## Project Structure
 Follow standard Spring Boot application architecture with services, and configuration as needed.
 
+## Steps to follow before applying changes
+1. **Pull Latest Changes**: Always start by pulling the latest changes from the main branch.
+2. **Create a Feature Branch**: Use a descriptive name for your branch (e.g., `feature/add-new-endpoint`).
+3. **Prepare your plan**: Outline the changes you plan to make, including any new features or bug fixes.
+4. **Ask me to review your plan**: Before you start coding, share your plan with me for feedback.
+5. **Implement Changes**: Make your changes in the feature branch.
+6. **Test Your Changes**: Run unit tests and integration tests to ensure everything works as expected.
+7. **Commit Your Changes**: Use clear and descriptive commit messages.
+8. **Push Your Branch**: Push your changes to the remote repository.
+9. **Create a Pull Request**: Open a pull request against the main branch, and request a review from me.
+
 
 

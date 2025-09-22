@@ -35,32 +35,69 @@ Once set up, you can ask Claude Desktop things like:
      - Open Cloud Shell in your Google Cloud Console.
      - Run the following command: `gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive`
      - This will open a browser window to authenticate your Google account and grant the necessary permissions.
-     - After successful authentication, the credentials will be stored in your local environment, allowing the application to access Google Cloud resources.
+     - After successful authentication, the credentials will be stored in your Cloud Shell environment, allowing the application to access Google Cloud resources.
      - Look for the credential file that was created, it should be something like: `Credentials saved to file: [/tmp/tmp.6Rvsdsdfesx/application_default_credentials.json]`
      - Copy the contents of the credential file to a new file named `application_default_credentials.json` in the home directory of your local machine. (e.g. `~/application_default_credentials.json`)
 
 ### 🎯 Choose Your Setup Method
 
-| Method                                                               | Time | Requirements | Best For |
-|----------------------------------------------------------------------|------|--------------|----------|
-| **[📦 Native Binary - (not available yet)](#-native-binary-no-java)** | **min** | None! | **Most users** |
-| [☕ Java Build](#-java-build-traditional)                             | 5 min | Java 24+ | Developers |
+| Method                                          | Requirements to build the application| Build Time  | Requirements to run the application | Startup Time | Best For |
+|-------------------------------------------------|------------|---------------------------------------|---------------------------------------|--------------|-------------|
+| **[📦 Native Binary](#-native-binary-no-java)** | Maven and Java 24+                  | 5 min        | None!                                 | 0.48 sec     | **Most users**    |
+| **[☕ Java Build](#-java-build-traditional)**    | Maven and Java 24+         | 10 sec                 | Java 24+                              | 4.6 sec      | Developers   |
 ---
 
-### ☕ Java Build (Traditional)
 
-**For developers who want to build from source**
-
-#### Clone the repository and generate the jar file:
+## Building the Application
+### Clone the repository:
 ```bash
 git clone <this-repo>
 cd mcp-google-drive-server
-./mvnw clean package
 ```
 
-## Testing with Claude Desktop (using STDIO)
-### Then configure Claude Desktop with:
-- To configure the 'mcp-google-drive-server' to run in [STDIO](https://modelcontextprotocol.io/docs/concepts/transports#standard-input%2Foutput-stdio) mode.
+### 📦 Native Binary (No Java)
+**For developers who want to build from source**
+#### Build the native image for STDIO mode:
+```bash
+./mvnw clean package -Pnative,mcp-stdio
+```
+or
+#### Build the native image for SSE mode:
+```bash
+./mvnw clean package -Pnative
+```
+
+### ☕ Java Build (Traditional)
+**For developers who want to build from source**
+#### Build the jar file:
+```bash
+./mvnw clean package
+```
+---
+
+## Running the Application
+### Testing with Claude Desktop (using [STDIO](https://modelcontextprotocol.io/docs/concepts/transports#standard-input%2Foutput-stdio) mode):
+The claude_desktop_config.json file is typically located in the following home directory: ~/.config/Claude
+
+This file must be configured with the following content to enable the MCP Google Drive Server.
+#### 📦 Configuring and Running the application in Native Binary (No Java)
+```json
+{
+  "mcpServers": {
+    "mcp-google-drive-server": {
+      "command": "/FULL/PATH/TO/target/mcp-google-drive-server",
+      "args": [],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "/FULL/PATH/TO/application_default_credentials.json"
+      }
+    }
+  }
+}
+```
+⚠️ **Use the full path to your generated native binary and application_default_credentials files.**
+
+or
+#### ☕ Configuring and Running the application in Java Build (Traditional)
 ```json
 {
   "mcpServers": {
@@ -81,39 +118,45 @@ cd mcp-google-drive-server
 ⚠️ **Use the full path to your java 24 installation, generated jar and application_default_credentials files.**
 
 
-### Test It Works
+#### Test It Works
 1. Restart Claude Desktop
-2. Look for the 🔧 icon in a new conversation
-3. Try: *"What are the 10 famous touristic place of Sao Paulo, please save the result in my google drive"*
+2. Look for the Search and Tool icon in a new conversation, and click on it
+3. Look for the `mcp-google-drive-server` in the list of available mcp servers
+4. Try: *"What are the 10 famous touristic place of Sao Paulo, please save the result in my google drive"*
 
 ✅ **Success**: You should see Claude use the `upload_microsoft_world_file` tool!
 
-### Troubleshooting
-#### "Tool not found" in Claude Desktop
-1. Check the JAR path is correct and absolute
+#### Troubleshooting
+##### "Tool not found" in Claude Desktop
+1. Check the JAR path or the native binary path is correct and absolute
 2. Verify environment variables are set
 3. Restart Claude Desktop completely
 4. Check Claude Desktop's logs/console for errors
+---
 
-## Testing with MCP Inspector (using SSE)
+
+### Testing with MCP Inspector (using [SSE](https://modelcontextprotocol.io/specification/2024-11-05/basic/transports#http-with-sse) mode)
 
 To test the server in SSE mode, you can use the [MCP Inspector](https://github.com/modelcontextprotocol/inspector?tab=readme-ov-file#quick-start-ui-mode) tool.
-
-### Run the application in SSE mode
-
-First, run the application in SSE mode. This can be done by using the following command:
-
+#### 📦 Running the application in Native Binary (No Java)
 ```bash
-GOOGLE_APPLICATION_CREDENTIALS=/FULL/PATH/TO/application_default_credentials.json /FULL/PATH/TO/java/24/bin/java -jar /FULL/PATH/TO/target/mcp-google-drive-server-0.0.1-SNAPSHOT.jar
+CLIENT_ID="clientid" CLIENT_SECRET="{noop}clientsecret" GOOGLE_APPLICATION_CREDENTIALS="/FULL/PATH/TO/application_default_credentials.json" /FULL/PATH/TO/target/mcp-google-drive-server
 ```
-⚠️ **Use the full path to your java 24 installation, generated jar and application_default_credentials files.**
+⚠️ **Use the full path of your generated Native Binary and application_default_credentials files.**
 
-### Get an access token
+#### ☕ Running the application in Java Build (Traditional)
+```bash
+CLIENT_ID="clientid" CLIENT_SECRET="{noop}clientsecret" GOOGLE_APPLICATION_CREDENTIALS="/FULL/PATH/TO/application_default_credentials.json" /FULL/PATH/TO/java/24/bin/java -jar /FULL/PATH/TO/target/mcp-google-drive-server-0.0.1-SNAPSHOT.jar
+```
+⚠️ **Use the full path of your java 24 installation, generated jar and application_default_credentials files.**
+
+
+#### Get an access token
 
 The server is secured with OAuth2. To connect to it, you need an access token. You can get one by sending a request to the token endpoint:
 
 ```bash
-curl -k -X POST -u mcp-client:secret http://localhost:8080/oauth2/token -d 'grant_type=client_credentials'
+curl -k -X POST -u clientid:clientsecret http://localhost:8080/oauth2/token -d 'grant_type=client_credentials'
 ```
 
 This will return a JSON response containing the access token:
@@ -128,11 +171,11 @@ This will return a JSON response containing the access token:
 ```
 And copy-paste the access token Or use JQ:
 ```bash
-curl -k -X POST -u mcp-client:secret http://localhost:8080/oauth2/token -d 'grant_type=client_credentials' | jq -r ".access_token"
+curl -k -X POST -u clientid:clientsecret http://localhost:8080/oauth2/token -d 'grant_type=client_credentials' | jq -r ".access_token"
 ```
 Store that token
 
-### Start the MCP Inspector
+#### Start the MCP Inspector
 ```bash
 npx @modelcontextprotocol/inspector@0.6.0
 ```
@@ -145,11 +188,12 @@ You can test it by clicking on the tool and filling in the parameters, then clic
 
 Note that the token is only valid for 5 minutes
 
-
-## Enable Debug Logging
+---
+## Logging 
+### Enable Debug Logging
 Set environment variable: `LOGGING_LEVEL_ROOT=DEBUG`
 
-## Checking Logs
+### Checking Logs
 You can check the logs in the `/usr/lib/claude-desktop/target` directory of the claude-desktop. The log file is named `mcp-google-drive-server.log`.
 
 ---
